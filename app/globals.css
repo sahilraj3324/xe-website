@@ -1,26 +1,211 @@
 @import "tailwindcss";
 
+@theme {
+  /* ── Fonts (CSS vars come from next/font in app/layout.tsx) ── */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-gambarino), ui-serif, Georgia, serif;
+
+  /* ── Navy ramp: hero / CTA / footer depth bands ── */
+  --color-navy-950: #0a1b33; /* darkest gradient base */
+  --color-navy-900: #0d2547; /* primary dark button fill */
+  --color-navy-800: #133460; /* gradient mid */
+  --color-navy-700: #1c497f; /* pin-stripe highlight */
+  --color-navy-600: #2a5c9b; /* brightest stripe / accent */
+
+  /* ── Sky: light clarity bands ── */
+  --color-sky-50: #e2f0fa; /* lightest tint */
+  --color-sky-100: #cde5f6; /* main light section background */
+  --color-sky-200: #b8d7ee; /* subtle borders / dividers */
+
+  /* ── Text ── */
+  --color-ink: #0a1a2f; /* headings & text on light */
+  --color-slate: #3f4e60; /* muted body copy on light */
+  --color-mist: #c7d4e3; /* muted text on dark bands */
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Default page surface = light sky band */
+  --background: var(--color-sky-100);
+  --foreground: var(--color-ink);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* ── Dark "depth" band: ribbed-glass photo + legibility overlay ──
+   Used by hero, mid-page CTA, and footer. */
+.depth-band {
+  position: relative;
+  background-color: #0a1b33;
+  background-image:
+    /* left-weighted dark overlay so text stays readable */
+    linear-gradient(
+      90deg,
+      rgba(8, 20, 40, 0.88) 0%,
+      rgba(8, 20, 40, 0.55) 40%,
+      rgba(8, 20, 40, 0.15) 100%
+    ),
+    url("/images/Image.png");
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+/* Soft glow so text stays readable over the texture */
+.depth-band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 90% at 15% 25%,
+    rgba(10, 27, 51, 0.85) 0%,
+    rgba(10, 27, 51, 0.35) 45%,
+    rgba(10, 27, 51, 0) 75%
+  );
+  pointer-events: none;
+}
+
+.depth-band > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Flat depth band: same ribbed-glass photo, used by the CTA and footer
+   so they read as one continuous band. ── */
+.depth-band-flat {
+  position: relative;
+  background-color: #0a1b33;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(8, 20, 40, 0.85) 0%,
+      rgba(8, 20, 40, 0.5) 45%,
+      rgba(8, 20, 40, 0.2) 100%
+    ),
+    url("/images/Image.png");
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.depth-band-flat > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Footer panel: ribbed-glass photo showing through a teal→periwinkle
+   gradient (semi-transparent so the texture reads, like the Figma). ── */
+.footer-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(208, 237, 255, 0.5);
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(3, 88, 136, 0.82) 0%,
+      rgba(45, 111, 154, 0.8) 34%,
+      rgba(188, 208, 251, 0.88) 100%
+    ),
+    url("/images/Image.png");
+  background-size: cover, cover;
+  background-position: center, center;
+}
+
+.footer-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.quper-mockup {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 58px), calc(100% - 58px) 100%, 0 100%);
+}
+
+.quper-cloud {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.46);
+  filter: blur(12px);
+}
+
+.quper-cloud-a {
+  left: -4%;
+  top: 26%;
+  width: 46%;
+  height: 72px;
+}
+
+.quper-cloud-b {
+  right: -8%;
+  top: 48%;
+  width: 52%;
+  height: 88px;
+}
+
+.quper-office-notch {
+  clip-path: polygon(0 0, calc(100% - 72px) 0, 100% 72px, 100% 100%, 0 100%);
+}
+
+.case-study-metrics {
+  position: relative;
+}
+
+.case-study-metrics::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: -48px;
+  width: 245px;
+  height: 48px;
+  background: #a9d0ea;
+  clip-path: polygon(22% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.case-card-image {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 6px;
+  background-size: cover;
+  background-position: center;
+}
+
+.case-card-healthcare {
+  background-image:
+    radial-gradient(circle at 50% 48%, rgba(111, 225, 246, 0.85) 0 12%, rgba(33, 126, 153, 0.7) 29%, rgba(2, 31, 44, 0.94) 68%),
+    linear-gradient(180deg, transparent 0 80%, rgba(3, 8, 13, 0.95) 80%),
+    linear-gradient(90deg, transparent 42%, rgba(2, 6, 10, 0.9) 43% 49%, transparent 50%),
+    radial-gradient(ellipse at center, #0b7593 0%, #062232 78%);
+}
+
+.case-card-logistics {
+  background-image:
+    radial-gradient(circle at 55% 45%, rgba(126, 106, 255, 0.58) 0 14%, transparent 42%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0 2px, transparent 2px 22px),
+    linear-gradient(135deg, #081438 0%, #0d41d7 48%, #06142b 100%);
+}
+
+.case-card-distribution {
+  background-image:
+    radial-gradient(ellipse at 22% 70%, rgba(221, 52, 255, 0.75) 0 8%, transparent 34%),
+    radial-gradient(ellipse at 70% 10%, rgba(255, 255, 255, 0.9) 0 5%, transparent 28%),
+    linear-gradient(135deg, #0707f1 0%, #090027 54%, #1b0440 100%);
+}
+
+@media (max-width: 767px) {
+  .quper-mockup {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 34px), calc(100% - 34px) 100%, 0 100%);
+  }
+
+  .quper-office-notch {
+    clip-path: polygon(0 0, calc(100% - 42px) 0, 100% 42px, 100% 100%, 0 100%);
+  }
+
+  .case-study-metrics::before {
+    top: -32px;
+    width: 130px;
+    height: 32px;
+  }
 }
